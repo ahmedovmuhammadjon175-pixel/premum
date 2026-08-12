@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TezkorStarsXBot - WebApp</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      user-select: none;
+    }
+
+    body {
+      background-color: #0f111a;
+      color: #ffffff;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Top Balance Bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+    }
+
+    .balance-info {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    .balance-amount {
+      font-size: 16px;
+      font-weight: bold;
+      color: #ffffff;
+    }
+
+    .btn-add-balance {
+      background-color: #10b981;
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Card Box */
+    .card {
+      background-color: #171925;
+      border-radius: 18px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      border: 1px solid #23263a;
+    }
+
+    .input-label {
+      font-size: 14px;
+      color: #94a3b8;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 8px;
+      background-color: #0f111a;
+      border-radius: 12px;
+      padding: 6px;
+      border: 1px solid #2a2d43;
+    }
+
+    .input-group input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      font-size: 15px;
+      padding: 8px 12px;
+      outline: none;
+    }
+
+    .btn-self {
+      background-color: #5856d6;
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Tariffs Grid */
+    .tariffs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .tariff-item {
+      background-color: #0f111a;
+      border: 1px solid #2a2d43;
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tariff-item.active {
+      border: 2px solid #5856d6;
+      box-shadow: 0 0 12px rgba(88, 86, 214, 0.3);
+    }
+
+    .tariff-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .tariff-price {
+      font-size: 12px;
+      color: #eab308;
+    }
+
+    /* Main Action Button */
+    .btn-primary {
+      background-color: #5856d6;
+      color: #ffffff;
+      border: none;
+      padding: 16px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      width: 100%;
+    }
+
+    /* Tab Section */
+    .tabs {
+      display: flex;
+      background-color: #0f111a;
+      border-radius: 12px;
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      font-size: 13px;
+      color: #94a3b8;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      background-color: #272a3e;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #64748b;
+      font-size: 14px;
+      padding: 24px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Balans paneli -->
+  <div class="top-bar">
+    <div>
+      <div class="balance-info">BALANS:</div>
+      <div class="balance-amount"><span id="userBalance">0</span> so'm</div>
+    </div>
+    <button class="btn-add-balance" onclick="addBalance()">+ Hisobni to'ldirish</button>
+  </div>
+
+  <!-- Asosiy kartochka -->
+  <div class="card">
+    <div class="input-label">Telegram Username</div>
+    <div class="input-group">
+      <input type="text" id="usernameInput" placeholder="@username">
+      <button class="btn-self" onclick="setMyUsername()">O'zimga</button>
+    </div>
+
+    <div class="input-label">Muddatni tanlang</div>
+    <div class="tariffs-grid">
+      <div class="tariff-item" onclick="selectTariff(this, '1 Oy', 0)">
+        <div class="tariff-title">1 Oy</div>
+        <div class="tariff-price">Admin orqali</div>
+      </div>
+      <div class="tariff-item" onclick="selectTariff(this, '3 Oy', 170000)">
+        <div class="tariff-title">3 Oy</div>
+        <div class="tariff-price">170,000 so'm</div>
+      </div>
+      <div class="tariff-item active" onclick="selectTariff(this, '6 Oy', 220000)">
+        <div class="tariff-title">6 Oy</div>
+        <div class="tariff-price">220,000 so'm</div>
+      </div>
+      <div class="tariff-item" onclick="selectTariff(this, '12 Oy', 400000)">
+        <div class="tariff-title">12 Oy</div>
+        <div class="tariff-price">400,000 so'm</div>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="submitOrder()">Premium olish</button>
+  </div>
+
+  <!-- Statistika kartochkasi -->
+  <div class="card">
+    <div class="tabs">
+      <div class="tab active">🕒 Bugungi</div>
+      <div class="tab">📅 Top Oylik</div>
+      <div class="tab">🏆 Liderlar</div>
+    </div>
+    <div class="empty-state">Bo'sh</div>
+  </div>
+
+  <script>
+    let tg = window.Telegram ? window.Telegram.WebApp : null;
+    if (tg) tg.expand();
+
+    let selectedTariffName = '6 Oy';
+    let selectedPrice = 220000;
+
+    function setMyUsername() {
+      if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+        document.getElementById('usernameInput').value = '@' + (tg.initDataUnsafe.user.username || '');
+      } else {
+        document.getElementById('usernameInput').value = '@my_username';
+      }
+    }
+
+    function selectTariff(element, name, price) {
+      document.querySelectorAll('.tariff-item').forEach(el => el.classList.remove('active'));
+      element.classList.add('active');
+      selectedTariffName = name;
+      selectedPrice = price;
+    }
+
+    function addBalance() {
+      if (tg) {
+        tg.sendData(JSON.stringify({ action: 'add_balance' }));
+      } else {
+        alert("Hisob to'ldirish tugmasi bosildi.");
+      }
+    }
+
+    function submitOrder() {
+      let username = document.getElementById('usernameInput').value;
+      if (!username) {
+        alert("Iltimos, Telegram username kiriting!");
+        return;
+      }
+
+      let payload = {
+        action: 'buy_premium',
+        username: username,
+        tariff: selectedTariffName,
+        price: selectedPrice
+      };
+
+      if (tg) {
+        tg.sendData(JSON.stringify(payload));
+      } else {
+        alert("Buyurtma yuborildi: " + JSON.stringify(payload));
+      }
+    }
+  </script>
+</body>
+  </html>
+  
