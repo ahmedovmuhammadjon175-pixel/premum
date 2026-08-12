@@ -225,65 +225,84 @@
   
 
   <script>
-    let tg = window.Telegram ? window.Telegram.WebApp : null;
-    if (tg) tg.expand();
+let tg = window.Telegram ? window.Telegram.WebApp : null;
+if (tg) tg.expand();
 
-    let selectedTariffName = '6 Oy';
-    let selectedPrice = 220000;
+let selectedTariffName = '6 Oy';
+let selectedPrice = 220000;
+let currentAmount = 10000;
 
-    function setMyUsername() {
-      if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-        document.getElementById('usernameInput').value = '@' + (tg.initDataUnsafe.user.username || '');
-      } else {
-        document.getElementById('usernameInput').value = '@my_username';
-      }
-    }
-
-    function selectTariff(element, name, price) {
-      document.querySelectorAll('.tariff-item').forEach(el => el.classList.remove('active'));
-      element.classList.add('active');
-      selectedTariffName = name;
-      selectedPrice = price;
-    }
-
-  
-function addBalance() {
-    let amount = prompt("Karta orqali to'lov qilingan summani kiriting (so'mda):", "10000");
-    
-    if (!amount) return;
-
-    if (tg) {
-        tg.sendData(JSON.stringify({ 
-            action: 'topup_request', 
-            amount: amount 
-        }));
+// Username'ni avto-to'ldirish
+function setMyUsername() {
+    if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+        document.getElementById('usernameInput').value = '@' + (tg.initDataUnsafe.user.username || 'my_username');
     } else {
-        alert("To'lov so'rovi yuborildi: " + amount + " so'm");
+        document.getElementById('usernameInput').value = '@my_username';
     }
 }
-    
 
-    function submitOrder() {
-      let username = document.getElementById('usernameInput').value;
-      if (!username) {
+// Tarif tanlash
+function selectTariff(element, name, price) {
+    document.querySelectorAll('.tariff-item').forEach(el => el.classList.remove('active'));
+    element.classList.add('active');
+    selectedTariffName = name;
+    selectedPrice = price;
+}
+
+// Modal oynalarni boshqarish
+function openPaymentModal() {
+    document.getElementById('paymentModal').style.display = 'flex';
+}
+
+function closeModal() {
+    document.getElementById('paymentModal').style.display = 'none';
+}
+
+// "To'lovga o'tish 🚀" tugmasi bosilganda
+function processPayment() {
+    let inputVal = document.getElementById('payAmountInput').value;
+    if (!inputVal || inputVal < 1000) {
+        alert("Iltimos, kamida 1000 so'm kiriting!");
+        return;
+    }
+    currentAmount = inputVal;
+    document.getElementById('modalAmount').innerText = parseInt(currentAmount).toLocaleString() + " so'm";
+    openPaymentModal();
+}
+
+// "✅ To'lov qildim" tugmasi bosilganda botga xabar yuborish
+function sendPaymentToBot() {
+    if (tg) {
+        tg.sendData(JSON.stringify({
+            action: 'topup_request',
+            amount: currentAmount
+        }));
+        tg.close();
+    } else {
+        alert("To'lov so'rovi yuborildi: " + currentAmount + " so'm");
+        closeModal();
+    }
+}
+
+// Premium buyurtma berish
+function submitOrder() {
+    let username = document.getElementById('usernameInput').value;
+    if (!username) {
         alert("Iltimos, Telegram username kiriting!");
         return;
-      }
-
-      let payload = {
-        action: 'buy_premium',
-        username: username,
-        tariff: selectedTariffName,
-        price: selectedPrice
-      };
-
-      if (tg) {
-        tg.sendData(JSON.stringify(payload));
-      } else {
-        alert("Buyurtma yuborildi: " + JSON.stringify(payload));
-      }
     }
-  </script>
+    if (tg) {
+        tg.sendData(JSON.stringify({
+            action: 'buy_premium',
+            username: username,
+            tariff: selectedTariffName,
+            price: selectedPrice
+        }));
+        tg.close();
+    } else {
+        alert("Buyurtma yuborildi: " + selectedTariffName + " - " + username);
+    }
+}
+</script>
 </body>
-  </html>
-  
+</html>
