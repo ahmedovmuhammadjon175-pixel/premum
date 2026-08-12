@@ -211,12 +211,16 @@
             <div style="font-size: 11px; color: #f43f5e; background: rgba(244,63,94,0.1); padding: 5px; border-radius: 4px;">⚠️ Iltimos, aynan ko'rsatilgan summani o'tkazing!</div>
         </div>
 
-        <div style="background: #0f172a; padding: 12px; border-radius: 8px; text-align: left; margin-bottom: 15px;">
-            <div style="font-size: 12px; color: #94a3b8;">Karta raqami:</div>
-            <div style="font-size: 16px; font-weight: bold; color: #fff; letter-spacing: 1px;">5614 6821 1662 9579</div>
-            <div style="font-size: 13px; color: #cbd5e1; margin-top: 4px;">Xakimjonov Muhammadshokir</div>
-            <div style="font-size: 11px; color: #64748b;">Uzcard</div>
-        </div>
+        # Python kodingizdagi ushbu qismni toping va o'zgartiring:
+text = (
+    f"💳 **Hisobni to'ldirish**\n\n"
+    f"💰 **Summa:** {formatted_amount}  so'm\n\n"
+    f"🏛 **Bank:** Uzcard\n"
+    f"💳 **Karta raqami:** `5614682116629579`\n"
+    f"👤 **Karta egasi:** Xakimjonov Muhammadshokir\n\n"
+    f"⏳ *To'lov tizimi avtotasdiqlash jarayonida...*\n"
+)
+      
 
         <button class="btn-primary" style="background: #6366f1; width: 100%; padding: 12px; font-weight: bold;" onclick="sendPaymentToBot()">✅ To'lov qildim</button>
         <button style="background: transparent; border: none; color: #94a3b8; margin-top: 10px; cursor: pointer;" onclick="closeModal()">Yopish</button>
