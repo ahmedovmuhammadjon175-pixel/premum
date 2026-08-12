@@ -181,27 +181,26 @@
 </head>
 <body>
 
-  <!-- Balans paneli -->
-  <div class="top-bar">
+  <!-- Balans paneli va Karta rekvizitlari -->
+<div class="top-bar">
     <div>
-      <div class="balance-info">BALANS:</div>
-      <div class="balance-amount"><span id="userBalance">0</span> so'm</div>
+        <div class="balance-info">BALANS:</div>
+        <div class="balance-amount"><span id="userBalance">0</span> so'm</div>
     </div>
-    <button class="btn-add-balance" onclick="function addBalance() {
-    let amount = prompt("To'lov summasini kiriting (so'mda):", "10000");
-    if (!amount) return;
+    <button class="btn-add-balance" onclick="addBalance()">+ Hisobni to'ldirish</button>
+</div>
 
-    if (tg) {
-        tg.sendData(JSON.stringify({ 
-            action: 'topup_request', 
-            amount: amount 
-        }));
-    } else {
-        alert("To'lov so'rovi yuborildi: " + amount + " so'm");
-    }
-}
-      ">+ Hisobni to'ldirish</button>
-  </div>
+<!-- Karta bloki -->
+<div class="card" style="margin-top: 10px; background: #1e293b; border: 1px solid #334155;">
+    <div class="input-label" style="color: #94a3b8; font-size: 12px;">TO'LOV UCHUN KARTA:</div>
+    <div style="font-size: 18px; font-weight: bold; color: #38bdf8; letter-spacing: 1px; margin: 4px 0;">
+        5614 6821 1662 9579
+    </div>
+    <div style="font-size: 14px; color: #f8fafc; font-weight: 500;">
+        Xakimjonov Muhammadshokir
+    </div>
+</div>
+  
 
   <!-- Asosiy kartochka -->
   <div class="card">
@@ -267,9 +266,10 @@
     }
 
   
-  function addBalance() {
-    let amountInput = document.getElementById('topupAmountInput');
-    let amount = amountInput && amountInput.value ? amountInput.value : '10000';
+function addBalance() {
+    let amount = prompt("Karta orqali to'lov qilingan summani kiriting (so'mda):", "10000");
+    
+    if (!amount) return;
 
     if (tg) {
         tg.sendData(JSON.stringify({ 
@@ -279,7 +279,7 @@
     } else {
         alert("To'lov so'rovi yuborildi: " + amount + " so'm");
     }
-  }
+}
     
 
     function submitOrder() {
