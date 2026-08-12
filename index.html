@@ -181,67 +181,48 @@
 </head>
 <body>
 
-  <!-- Balans paneli va Karta rekvizitlari -->
+<!-- Balans paneli -->
 <div class="top-bar">
     <div>
         <div class="balance-info">BALANS:</div>
         <div class="balance-amount"><span id="userBalance">0</span> so'm</div>
     </div>
-    <button class="btn-add-balance" onclick="addBalance()">+ Hisobni to'ldirish</button>
+    <button class="btn-add-balance" onclick="openPaymentModal()">+ Hisobni to'ldirish</button>
 </div>
 
-<!-- Karta bloki -->
-<div class="card" style="margin-top: 10px; background: #1e293b; border: 1px solid #334155;">
-    <div class="input-label" style="color: #94a3b8; font-size: 12px;">TO'LOV UCHUN KARTA:</div>
-    <div style="font-size: 18px; font-weight: bold; color: #38bdf8; letter-spacing: 1px; margin: 4px 0;">
-        5614 6821 1662 9579
+<!-- 1-RASMDAGI KARTA BILAN TO'LOV BLOKI -->
+<div class="card">
+    <div style="font-weight: bold; margin-bottom: 10px; font-size: 16px;">💳 Karta orqali to'lov</div>
+    <div class="input-label">To'lov miqdori (Min: 1000 so'm)</div>
+    <div class="input-group" style="margin-top: 8px;">
+        <input type="number" id="payAmountInput" placeholder="💰 Summa..." value="10000">
     </div>
-    <div style="font-size: 14px; color: #f8fafc; font-weight: 500;">
-        Xakimjonov Muhammadshokir
+    <button class="btn-primary" style="margin-top: 15px; background: #eab308; color: #000; font-weight: bold;" onclick="processPayment()">To'lovga o'tish 🚀</button>
+</div>
+
+<!-- 2-RASMDAGI MODAL OYNA (Yashirin turadi) -->
+<div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
+    <div class="card" style="width: 85%; max-width: 350px; background: #1e293b; text-align: center; border: 1px solid #334155;">
+        <h3 style="margin-top: 0;">Hisobni to'ldirish</h3>
+        
+        <div style="background: #0f172a; padding: 12px; border-radius: 8px; margin: 15px 0;">
+            <div style="font-size: 12px; color: #94a3b8;">O'tkaziladigan summa:</div>
+            <div id="modalAmount" style="font-size: 22px; font-weight: bold; color: #eab308; margin: 5px 0;">10 000 so'm</div>
+            <div style="font-size: 11px; color: #f43f5e; background: rgba(244,63,94,0.1); padding: 5px; border-radius: 4px;">⚠️ Iltimos, aynan ko'rsatilgan summani o'tkazing!</div>
+        </div>
+
+        <div style="background: #0f172a; padding: 12px; border-radius: 8px; text-align: left; margin-bottom: 15px;">
+            <div style="font-size: 12px; color: #94a3b8;">Karta raqami:</div>
+            <div style="font-size: 16px; font-weight: bold; color: #fff; letter-spacing: 1px;">5614 6821 1662 9579</div>
+            <div style="font-size: 13px; color: #cbd5e1; margin-top: 4px;">Xakimjonov Muhammadshokir</div>
+            <div style="font-size: 11px; color: #64748b;">Uzcard</div>
+        </div>
+
+        <button class="btn-primary" style="background: #6366f1; width: 100%; padding: 12px; font-weight: bold;" onclick="sendPaymentToBot()">✅ To'lov qildim</button>
+        <button style="background: transparent; border: none; color: #94a3b8; margin-top: 10px; cursor: pointer;" onclick="closeModal()">Yopish</button>
     </div>
 </div>
   
-
-  <!-- Asosiy kartochka -->
-  <div class="card">
-    <div class="input-label">Telegram Username</div>
-    <div class="input-group">
-      <input type="text" id="usernameInput" placeholder="@username">
-      <button class="btn-self" onclick="setMyUsername()">O'zimga</button>
-    </div>
-
-    <div class="input-label">Muddatni tanlang</div>
-    <div class="tariffs-grid">
-      <div class="tariff-item" onclick="selectTariff(this, '1 Oy', 0)">
-        <div class="tariff-title">1 Oy</div>
-        <div class="tariff-price">Admin orqali</div>
-      </div>
-      <div class="tariff-item" onclick="selectTariff(this, '3 Oy', 170000)">
-        <div class="tariff-title">3 Oy</div>
-        <div class="tariff-price">170,000 so'm</div>
-      </div>
-      <div class="tariff-item active" onclick="selectTariff(this, '6 Oy', 220000)">
-        <div class="tariff-title">6 Oy</div>
-        <div class="tariff-price">220,000 so'm</div>
-      </div>
-      <div class="tariff-item" onclick="selectTariff(this, '12 Oy', 400000)">
-        <div class="tariff-title">12 Oy</div>
-        <div class="tariff-price">400,000 so'm</div>
-      </div>
-    </div>
-
-    <button class="btn-primary" onclick="submitOrder()">Premium olish</button>
-  </div>
-
-  <!-- Statistika kartochkasi -->
-  <div class="card">
-    <div class="tabs">
-      <div class="tab active">🕒 Bugungi</div>
-      <div class="tab">📅 Top Oylik</div>
-      <div class="tab">🏆 Liderlar</div>
-    </div>
-    <div class="empty-state">Bo'sh</div>
-  </div>
 
   <script>
     let tg = window.Telegram ? window.Telegram.WebApp : null;
