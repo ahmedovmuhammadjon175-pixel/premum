@@ -187,7 +187,20 @@
       <div class="balance-info">BALANS:</div>
       <div class="balance-amount"><span id="userBalance">0</span> so'm</div>
     </div>
-    <button class="btn-add-balance" onclick="addBalance()">+ Hisobni to'ldirish</button>
+    <button class="btn-add-balance" onclick="function addBalance() {
+    let amount = prompt("To'lov summasini kiriting (so'mda):", "10000");
+    if (!amount) return;
+
+    if (tg) {
+        tg.sendData(JSON.stringify({ 
+            action: 'topup_request', 
+            amount: amount 
+        }));
+    } else {
+        alert("To'lov so'rovi yuborildi: " + amount + " so'm");
+    }
+}
+      ">+ Hisobni to'ldirish</button>
   </div>
 
   <!-- Asosiy kartochka -->
