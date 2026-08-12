@@ -253,13 +253,21 @@
       selectedPrice = price;
     }
 
-    function addBalance() {
-      if (tg) {
-        tg.sendData(JSON.stringify({ action: 'add_balance' }));
-      } else {
-        alert("Hisob to'ldirish tugmasi bosildi.");
-      }
+  
+  function addBalance() {
+    let amountInput = document.getElementById('topupAmountInput');
+    let amount = amountInput && amountInput.value ? amountInput.value : '10000';
+
+    if (tg) {
+        tg.sendData(JSON.stringify({ 
+            action: 'topup_request', 
+            amount: amount 
+        }));
+    } else {
+        alert("To'lov so'rovi yuborildi: " + amount + " so'm");
     }
+  }
+    
 
     function submitOrder() {
       let username = document.getElementById('usernameInput').value;
