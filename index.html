@@ -45,19 +45,19 @@
 
     <div class="input-label">Tarifni tanlang</div>
     <div class="tariffs">
-        <div class="tariff-item active" onclick="selectTariff(this, '1 Oy', 5000, true)">
+        <div class="tariff-item active" onclick="selectTariff(this, '1 Oy', 45000)">
             <div class="tariff-title">1 Oy</div>
-            <div class="tariff-price">5,000 so'm (Admin)</div>
+            <div class="tariff-price">45,000 so'm</div>
         </div>
-        <div class="tariff-item" onclick="selectTariff(this, '3 Oy', 170000, false)">
+        <div class="tariff-item" onclick="selectTariff(this, '3 Oy', 170000)">
             <div class="tariff-title">3 Oy</div>
             <div class="tariff-price">170,000 so'm</div>
         </div>
-        <div class="tariff-item" onclick="selectTariff(this, '6 Oy', 220000, false)">
+        <div class="tariff-item" onclick="selectTariff(this, '6 Oy', 220000)">
             <div class="tariff-title">6 Oy</div>
             <div class="tariff-price">220,000 so'm</div>
         </div>
-        <div class="tariff-item" onclick="selectTariff(this, '12 Oy', 400000, false)">
+        <div class="tariff-item" onclick="selectTariff(this, '12 Oy', 400000)">
             <div class="tariff-title">12 Oy</div>
             <div class="tariff-price">400,000 so'm</div>
         </div>
@@ -71,8 +71,7 @@ let tg = window.Telegram ? window.Telegram.WebApp : null;
 if (tg) tg.expand();
 
 let selectedTariffName = '1 Oy';
-let selectedPrice = 5000;
-let isAdminTariff = true;
+let selectedPrice = 45000;
 
 function setMyUsername() {
     if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
@@ -82,18 +81,19 @@ function setMyUsername() {
     }
 }
 
-function selectTariff(element, name, price, isAdmin) {
+function selectTariff(element, name, price) {
     document.querySelectorAll('.tariff-item').forEach(el => el.classList.remove('active'));
     element.classList.add('active');
     selectedTariffName = name;
     selectedPrice = price;
-    isAdminTariff = isAdmin;
 }
 
 function requestTopUp() {
     if (tg) {
         tg.sendData(JSON.stringify({ action: 'topup_request' }));
         tg.close();
+    } else {
+        alert("Hisobni to'ldirish so'rovi yuborildi!");
     }
 }
 
@@ -103,23 +103,16 @@ function submitOrder() {
         alert("Iltimos, Telegram username kiriting!");
         return;
     }
-    if (isAdminTariff) {
-        let adminUrl = `https://t.me/ahmedovmuhammadjon175_pixel?text=Salom,%201%20oylik%20premium%20sotib%20olmoqchiman.%20Userim: ${username}`;
-        if (tg && tg.openTelegramLink) {
-            tg.openTelegramLink(adminUrl);
-        } else {
-            window.open(adminUrl, '_blank');
-        }
+    if (tg) {
+        tg.sendData(JSON.stringify({
+            action: 'buy_premium',
+            username: username,
+            tariff: selectedTariffName,
+            price: selectedPrice
+        }));
+        tg.close();
     } else {
-        if (tg) {
-            tg.sendData(JSON.stringify({
-                action: 'buy_premium',
-                username: username,
-                tariff: selectedTariffName,
-                price: selectedPrice
-            }));
-            tg.close();
-        }
+        alert("Buyurtma yuborildi: " + selectedTariffName);
     }
 }
 </script>
