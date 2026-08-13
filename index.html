@@ -70,6 +70,13 @@
 let tg = window.Telegram ? window.Telegram.WebApp : null;
 if (tg) tg.expand();
 
+// URL'dan balansni o'qib olib ekranga chiqarish
+const urlParams = new URLSearchParams(window.location.search);
+const currentBalance = urlParams.get('balance');
+if (currentBalance) {
+    document.getElementById('userBalance').innerText = currentBalance;
+}
+
 let selectedTariffName = '1 Oy';
 let selectedPrice = 45000;
 
