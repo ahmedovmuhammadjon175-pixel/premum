@@ -129,20 +129,20 @@
         <div class="balance-info">BALANS:</div>
         <div class="balance-amount"><span id="userBalance">0</span> so'm</div>
     </div>
-    <button class="btn-add-balance" onclick="openPaymentModal()">+ Hisobni to'ldirish</button>
+    <button class="btn-add-balance" onclick="document.getElementById('payAmountInput').focus();">+ Hisobni to'ldirish</button>
 </div>
 
 <!-- KARTA BILAN TO'LOV BLOKI -->
 <div class="card">
     <div style="font-weight: bold; margin-bottom: 10px; font-size: 16px;">💳 Karta orqali to'lov</div>
-    <div class="input-label">To'lov miqdori (Min: 1000 so'm)</div>
+    <div class="input-label">To'lov miqdori (Min: 5 000 so'm)</div>
     <div class="input-group" style="margin-top: 8px;">
-        <input type="number" id="payAmountInput" placeholder="💰 Summa..." value="10000">
+        <input type="number" id="payAmountInput" placeholder="💰 Summa..." value="5000">
     </div>
     <button class="btn-primary" style="margin-top: 15px; background: #eab308; color: #000; font-weight: bold;" onclick="processPayment()">To'lovga o'tish 🚀</button>
 </div>
 
-<!-- PREMIUM SOTIB OLISH BLOKI (O'chib ketgan qism tiklandi) -->
+<!-- PREMIUM SOTIB OLISH BLOKI -->
 <div class="card">
     <div style="font-weight: bold; margin-bottom: 15px; font-size: 16px;">⭐️ Premium sotib olish</div>
     
@@ -166,7 +166,7 @@
             <div class="tariff-title">1 Yil</div>
             <div class="tariff-price">350,000 so'm</div>
         </div>
-        <div class="tariff-item" onclick="selectTariff(this, 'Uzoq muddat', 500000)">
+        <div class="tariff-item" onclick="selectTariff(this, 'Cheksiz', 500000)">
             <div class="tariff-title">Cheksiz</div>
             <div class="tariff-price">500,000 so'm</div>
         </div>
@@ -182,13 +182,13 @@
         
         <div style="background: #0f172a; padding: 12px; border-radius: 8px; margin: 15px 0;">
             <div style="font-size: 12px; color: #94a3b8;">O'tkaziladigan summa:</div>
-            <div id="modalAmount" style="font-size: 22px; font-weight: bold; color: #eab308; margin: 5px 0;">10 000 so'm</div>
+            <div id="modalAmount" style="font-size: 22px; font-weight: bold; color: #eab308; margin: 5px 0;">5 000 so'm</div>
             <div style="font-size: 11px; color: #f43f5e; background: rgba(244,63,94,0.1); padding: 5px; border-radius: 4px;">⚠️ Iltimos, aynan ko'rsatilgan summani o'tkazing!</div>
         </div>
 
-        <p>🏦 <b>Bank:</b> Uzcard</p>
-        <p>💳 <b>Karta raqami:</b> 5614682116629579</p>
-        <p>👤 <b>Karta egasi:</b> Xakimjonov Muhammadshokir</p>
+        <p>🏦 <b>Bank:</b> Karta</p>
+        <p>💳 <b>Karta raqami:</b> 5614 6821 1662 9579</p>
+        <p>👤 <b>Karta egasi:</b> Xakimjonov Muhammad shokir</p>
 
         <button class="btn-primary" style="background: #6366f1; width: 100%; padding: 12px; font-weight: bold; margin-top: 10px;" onclick="sendPaymentToBot()">✅ To'lov qildim</button>
         <button style="background: transparent; border: none; color: #94a3b8; margin-top: 15px; cursor: pointer; width: 100%; padding: 10px;" onclick="closeModal()">Yopish</button>
@@ -201,14 +201,14 @@ if (tg) tg.expand();
 
 let selectedTariffName = '6 Oy';
 let selectedPrice = 220000;
-let currentAmount = 10000;
+let currentAmount = 5000;
 
 // Username'ni avto-to'ldirish
 function setMyUsername() {
     if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-        document.getElementById('usernameInput').value = '@' + (tg.initDataUnsafe.user.username || 'my_username');
+        document.getElementById('usernameInput').value = '@' + (tg.initDataUnsafe.user.username || 'username_mavjud_emas');
     } else {
-        document.getElementById('usernameInput').value = '@my_username';
+        document.getElementById('usernameInput').value = '@mening_profilim';
     }
 }
 
@@ -232,12 +232,14 @@ function closeModal() {
 // "To'lovga o'tish 🚀" tugmasi bosilganda
 function processPayment() {
     let inputVal = document.getElementById('payAmountInput').value;
-    if (!inputVal || inputVal < 1000) {
-        alert("Iltimos, kamida 1000 so'm kiriting!");
+    // Minimal summani tekshirish (5000)
+    if (!inputVal || inputVal < 5000) {
+        alert("Iltimos, kamida 5 000 so'm kiriting!");
         return;
     }
     currentAmount = inputVal;
-    document.getElementById('modalAmount').innerText = parseInt(currentAmount).toLocaleString() + " so'm";
+    // Summani chiroyli qilib ajratib yozish (masalan: 10 000 so'm)
+    document.getElementById('modalAmount').innerText = parseInt(currentAmount).toLocaleString('ru-RU') + " so'm";
     openPaymentModal();
 }
 
@@ -245,12 +247,12 @@ function processPayment() {
 function sendPaymentToBot() {
     if (tg) {
         tg.sendData(JSON.stringify({
-            action: 'topup_request',
+            action: 'tolov_qilindi', // Bunga tegmaymiz, python shuni kutmoqda
             amount: currentAmount
         }));
         tg.close();
     } else {
-        alert("To'lov so'rovi yuborildi: " + currentAmount + " so'm");
+        alert("Botga to'lov so'rovi ketdi: " + currentAmount + " so'm\n(Bu yozuv faqat brauzerda chiqadi)");
         closeModal();
     }
 }
@@ -271,9 +273,10 @@ function submitOrder() {
         }));
         tg.close();
     } else {
-        alert("Buyurtma yuborildi: " + selectedTariffName + " - " + username);
+        alert("Buyurtma yuborildi:\nTarif: " + selectedTariffName + "\nUsername: " + username);
     }
 }
 </script>
 </body>
-</html>
+  </html>
+  
