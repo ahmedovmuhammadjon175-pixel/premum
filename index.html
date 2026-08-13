@@ -3,62 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Do'kon</title>
+    <title>Sovg'alar Do'koni</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background-color: #0f172a; color: white; padding: 15px; }
-        h2 { margin: 15px 0 10px 0; font-size: 16px; color: #94a3b8; }
-        .card { background: #1e293b; padding: 15px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .card:active { transform: scale(0.98); }
-        .price { color: #fbbf24; font-weight: bold; }
+        body { background-color: #0f172a; color: white; font-family: sans-serif; padding: 10px; margin: 0; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .card { background: #1e293b; border-radius: 12px; padding: 15px 5px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .card:active { transform: scale(0.95); }
+        .icon { font-size: 40px; margin-bottom: 5px; }
+        .stars { background: #334155; display: inline-block; padding: 2px 10px; border-radius: 15px; font-size: 12px; color: #fbbf24; }
+        
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: flex-end; }
+        .modal-content { background: #1e293b; width: 100%; max-width: 400px; padding: 20px; border-radius: 20px 20px 0 0; }
+        .input-box { width: 100%; padding: 12px; border-radius: 10px; border: none; margin: 10px 0; background: #0f172a; color: white; }
+        .btn-blue { background: #6366f1; color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; }
+        .btn-full { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; margin-top: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <h2>⭐️ Premium Tariflar</h2>
-    <div class="card" onclick="send('buy_premium', '3 Oy', 170000)">
-        <span>3 Oy Premium</span>
-        <span class="price">170 000 so'm</span>
-    </div>
-    <div class="card" onclick="send('buy_premium', '6 Oy', 225000)">
-        <span>6 Oy Premium</span>
-        <span class="price">225 000 so'm</span>
-    </div>
-    <div class="card" onclick="send('buy_premium', '12 Oy', 400000)">
-        <span>12 Oy Premium</span>
-        <span class="price">400 000 so'm</span>
-    </div>
+<div class="grid" id="giftGrid"></div>
 
-    <h2>🎁 Sovg'alar</h2>
-    <div class="card" onclick="send('buy_gift', 'Yurak', 5000)">
-        <span>💝 Pushti Yurak</span>
-        <span class="price">5 000 so'm</span>
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <div id="modalIcon" style="font-size: 60px; text-align: center;"></div>
+        <h3 id="modalName" style="text-align: center; margin: 10px 0;"></h3>
+        <div class="stars" id="modalStars" style="display: block; width: fit-content; margin: 0 auto;"></div>
+        
+        <input type="text" id="username" class="input-box" placeholder="@username">
+        <button class="btn-blue" onclick="setSelf()">O'zimga</button>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin: 15px 0;">
+            <span>Izoh qo'shish</span>
+            <input type="checkbox" id="addComment">
+        </div>
+        
+        <div id="totalPrice" style="text-align: center; color: #ef4444; font-weight: bold; margin-bottom: 10px;"></div>
+        
+        <button class="btn-full" style="background: #334155; color: white;" onclick="closeModal()">Bekor qilish</button>
+        <button class="btn-full" style="background: #6366f1; color: white;" onclick="send()">Yuborish</button>
     </div>
-    <div class="card" onclick="send('buy_gift', 'Ayiqcha', 5000)">
-        <span>🧸 Ayiqcha</span>
-        <span class="price">5 000 so'm</span>
-    </div>
-    <div class="card" onclick="send('buy_gift', 'Uzuk', 28000)">
-        <span>💍 Uzuk</span>
-        <span class="price">28 000 so'm</span>
-    </div>
+</div>
 
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
+<script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
 
-        function send(action, tariff, price) {
-            const username = tg.initDataUnsafe?.user?.username || '';
-            const data = {
-                action: action,
-                tariff: tariff,
-                price: price,
-                username: username
-            };
-            tg.sendData(JSON.stringify(data));
-            tg.close();
-        }
-    </script>
+    const gifts = [
+        { name: 'PUSHTI YURAK', icon: '💝', stars: 15, price: 5000 },
+        { name: 'AYIQCHA', icon: '🧸', stars: 15, price: 5000 },
+        { name: 'SOVG\'A QUTISI', icon: '🎁', stars: 25, price: 7000 },
+        { name: 'ATIRGUL', icon: '🌹', stars: 25, price: 7000 },
+        { name: 'TO\'RT', icon: '🎂', stars: 50, price: 15000 },
+        { name: 'GUL', icon: '💐', stars: 50, price: 15000 },
+        { name: 'ROKETA', icon: '🚀', stars: 50, price: 15000 },
+        { name: 'BUTULKA', icon: '🍾', stars: 50, price: 15000 },
+        { name: 'KUBOK', icon: '🏆', stars: 100, price: 28000 },
+        { name: 'UZUK', icon: '💍', stars: 100, price: 28000 }
+    ];
+
+    let currentGift = null;
+
+    function render() {
+        const grid = document.getElementById('giftGrid');
+        gifts.forEach(g => {
+            grid.innerHTML += `
+                <div class="card" onclick="openModal('${g.name}')">
+                    <div class="icon">${g.icon}</div>
+                    <div class="stars">⭐ ${g.stars}</div>
+                </div>
+            `;
+        });
+    }
+
+    function openModal(name) {
+        currentGift = gifts.find(g => g.name === name);
+        document.getElementById('modalIcon').innerText = currentGift.icon;
+        document.getElementById('modalName').innerText = currentGift.name;
+        document.getElementById('modalStars').innerText = '⭐ ' + currentGift.stars;
+        document.getElementById('totalPrice').innerText = 'Jami narx: ' + currentGift.price.toLocaleString() + ' so\'m';
+        document.getElementById('modal').style.display = 'flex';
+    }
+
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+    function setSelf() { document.getElementById('username').value = '@' + (tg.initDataUnsafe?.user?.username || 'user'); }
+
+    function send() {
+        const data = { action: 'buy_gift', gift: currentGift.name, price: currentGift.price, to: document.getElementById('username').value };
+        tg.sendData(JSON.stringify(data));
+        tg.close();
+    }
+
+    render();
+</script>
 </body>
 </html>
