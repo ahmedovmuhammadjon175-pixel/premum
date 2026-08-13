@@ -66,14 +66,14 @@
     <button class="btn-primary" onclick="submitOrder()">Premium xarid qilish</button>
 </div>
 
-<script>
+  <script>
 let tg = window.Telegram ? window.Telegram.WebApp : null;
 if (tg) tg.expand();
 
-// URL'dan balansni o'qib olib ekranga chiqarish
+// BALANSNI O'QIB OLISH QISMI (Mana buni qo'shasiz):
 const urlParams = new URLSearchParams(window.location.search);
 const currentBalance = urlParams.get('balance');
-if (currentBalance) {
+if (currentBalance !== null) {
     document.getElementById('userBalance').innerText = currentBalance;
 }
 
@@ -122,6 +122,5 @@ function submitOrder() {
         alert("Buyurtma yuborildi: " + selectedTariffName);
     }
 }
-</script>
-</body>
-</html>
+  </script>
+  
