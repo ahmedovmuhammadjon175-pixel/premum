@@ -3,78 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium</title>
+    <title>XakimovPremiumBot</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { background: #0c111d; color: white; font-family: sans-serif; padding: 15px; margin: 0; }
-        .top-pay { background: #1e293b; border: 1px solid #334155; padding: 15px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .btn-topup { background: #22c55e; color: white; border: none; padding: 8px 14px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        .plan-card { background: #1e1b4b; border: 1px solid #4338ca; padding: 18px; border-radius: 14px; margin-bottom: 10px; display: flex; justify-content: space-between; font-weight: bold; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #0b0f19; color: #ffffff; padding: 15px; }
+
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .bot-title { font-size: 20px; font-weight: bold; color: #6366f1; }
+        .balance-box { background: #131b2e; border: 1px solid #1e293b; padding: 8px 14px; border-radius: 12px; display: flex; align-items: center; gap: 10px; }
+        .bal-txt { font-size: 11px; color: #94a3b8; }
+        .bal-val { font-size: 15px; font-weight: bold; color: #22c55e; }
+        .btn-add { background: #22c55e; color: white; border: none; padding: 6px 12px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 12px; }
+
+        .main-card { background: #131b2e; border: 1px solid #1e293b; border-radius: 20px; padding: 20px; margin-bottom: 20px; }
+        .section-title { font-size: 13px; color: #94a3b8; margin-bottom: 10px; }
+
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        .input-field { flex: 1; background: #0b0f19; border: 1px solid #1e293b; border-radius: 12px; padding: 12px; color: white; outline: none; font-size: 14px; }
+        .btn-self { background: #6366f1; color: white; border: none; padding: 0 16px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 13px; }
+
+        .tariffs-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+        .tariff-card { background: #0b0f19; border: 1px solid #1e293b; border-radius: 16px; padding: 16px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .tariff-card.active { border-color: #6366f1; background: #1e1b4b; }
+        .t-title { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
+        .t-price { font-size: 12px; color: #fbbf24; font-weight: bold; }
+        .t-admin { font-size: 12px; color: #fbbf24; }
+
+        .btn-submit { width: 100%; background: #6366f1; color: white; border: none; padding: 16px; border-radius: 14px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        .btn-submit:active { opacity: 0.8; }
     </style>
 </head>
 <body>
-    <!-- Yuqorida hisob to'ldirish -->
-    <div class="top-pay">
-        <div>Balans: <b style="color:#22c55e">0 so'm</b></div>
-        <button class="btn-topup" onclick="tg.sendData('topup'); tg.close();">Hisob to'ldirish +</button>
-    </div>
 
-    <h3 style="color:#94a3b8;">⭐️ Premium Obunalar</h3>
-    <div class="plan-card"><span>1 Oy Premium</span><span style="color:#fbbf24">35.000 so'm</span></div>
-    <div class="plan-card"><span>3 Oy Premium</span><span style="color:#fbbf24">95.000 so'm</span></div>
-    <div class="plan-card"><span>1 Yil Premium</span><span style="color:#fbbf24">290.000 so'm</span></div>
-
-    <script>const tg = window.Telegram.WebApp; tg.expand();</script>
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="uz">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gifts</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        body { background: #0c111d; color: white; font-family: sans-serif; padding: 15px; margin: 0; }
-        
-        /* Kartalarni juda katta va yirik qilish */
-        .gifts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .gift-card { background: #1e293b; border: 2px solid #334155; padding: 35px 10px; border-radius: 25px; text-align: center; cursor: pointer; }
-        .gift-card:active { border-color: #6366f1; transform: scale(0.96); }
-        
-        /* SOVG'ANING SHAKLI VA EMOJISI (JUDA KATTA) */
-        .gift-shape { font-size: 80px; display: block; margin-bottom: 10px; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)); }
-        .gift-title { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
-        .gift-price { color: #fbbf24; font-weight: bold; background: #0f172a; padding: 6px 12px; border-radius: 12px; display: inline-block; }
-    </style>
-</head>
-<body>
-    <h2 style="color:#94a3b8; margin-top: 5px;">🎁 Gift Sovg'alar</h2>
-    
-    <div class="gifts-grid">
-        <div class="gift-card">
-            <span class="gift-shape">🧸</span>
-            <div class="gift-title">Ayiqcha</div>
-            <div class="gift-price">5.000 so'm</div>
-        </div>
-        <div class="gift-card">
-            <span class="gift-shape">🌹</span>
-            <div class="gift-title">Atirgul</div>
-            <div class="gift-price">7.000 so'm</div>
-        </div>
-        <div class="gift-card">
-            <span class="gift-shape">🚀</span>
-            <div class="gift-title">Roketa</div>
-            <div class="gift-price">15.000 so'm</div>
-        </div>
-        <div class="gift-card">
-            <span class="gift-shape">🏆</span>
-            <div class="gift-title">Kubok</div>
-            <div class="gift-price">28.000 so'm</div>
+    <div class="header">
+        <div class="bot-title">XakimovPremiumBot</div>
+        <div class="balance-box">
+            <div>
+                <div class="bal-txt">BALANS:</div>
+                <div class="bal-val" id="userBal">0 so'm</div>
+            </div>
+            <button class="btn-add" onclick="topUp()">+ Hisobni to'ldirish</button>
         </div>
     </div>
 
-    <script>const tg = window.Telegram.WebApp; tg.expand();</script>
+    <div class="main-card">
+        <div class="section-title">Telegram Username</div>
+        <div class="input-group">
+            <input type="text" id="targetUser" class="input-field" placeholder="@username">
+            <button class="btn-self" onclick="setMyUsername()">O'zimga</button>
+        </div>
+
+        <div class="section-title">Muddatni tanlang</div>
+        <div class="tariffs-grid">
+            <div class="tariff-card" onclick="selectTariff('1 Oy', 0, true, this)">
+                <div class="t-title">1 Oy</div>
+                <div class="t-admin">Admin orqali</div>
+            </div>
+            <div class="tariff-card" onclick="selectTariff('3 Oy', 170000, false, this)">
+                <div class="t-title">3 Oy</div>
+                <div class="t-price">170,000 so'm</div>
+            </div>
+            <div class="tariff-card active" onclick="selectTariff('6 Oy', 220000, false, this)">
+                <div class="t-title">6 Oy</div>
+                <div class="t-price">220,000 so'm</div>
+            </div>
+            <div class="tariff-card" onclick="selectTariff('12 Oy', 400000, false, this)">
+                <div class="t-title">12 Oy</div>
+                <div class="t-price">400,000 so'm</div>
+            </div>
+        </div>
+
+        <button class="btn-submit" onclick="submitOrder()">Premium olish</button>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        let myUsername = tg.initDataUnsafe?.user?.username ? '@' + tg.initDataUnsafe.user.username : '';
+        const urlParams = new URLSearchParams(window.location.search);
+        const userBalance = parseInt(urlParams.get('balance')) || 0;
+        document.getElementById('userBal').innerText = userBalance.toLocaleString() + " so'm";
+
+        let selected = { tariff: '6 Oy', price: 220000, isAdmin: false };
+
+        function setMyUsername() {
+            if (myUsername) {
+                document.getElementById('targetUser').value = myUsername;
+            } else {
+                alert("Telegramingizda username o'rnatilmagan!");
+            }
+        }
+
+        function selectTariff(tariff, price, isAdmin, el) {
+            document.querySelectorAll('.tariff-card').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            selected = { tariff, price, isAdmin };
+        }
+
+        function topUp() {
+            tg.sendData(JSON.stringify({ action: 'start_topup' }));
+            tg.close();
+        }
+
+        function submitOrder() {
+            // 1 Oy bo'lsa - Srazu sizning Telegram ID'ingizga o'tadi
+            if (selected.isAdmin) {
+                tg.openTelegramLink("https://t.me/user?id=6070808742");
+                return;
+            }
+
+            const username = document.getElementById('targetUser').value.trim();
+            if (!username) {
+                alert("Iltimos, Telegram username kiriting!");
+                return;
+            }
+
+            if (userBalance < selected.price) {
+                alert("Balansingizda mablag' yetarli emas! Iltimos, hisobingizni to'ldiring.");
+                return;
+            }
+
+            const data = {
+                action: 'buy_premium',
+                tariff: selected.tariff,
+                price: selected.price,
+                username: username
+            };
+            tg.sendData(JSON.stringify(data));
+            tg.close();
+        }
+    </script>
 </body>
 </html>
