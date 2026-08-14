@@ -3,46 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sovg'alar Do'koni</title>
+    <title>TezkorStarsXBot</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body { background-color: #0f172a; color: white; font-family: sans-serif; padding: 10px; margin: 0; }
+        .premium-btn { background: #22c55e; color: white; padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; margin-bottom: 20px; cursor: pointer; }
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .card { background: #1e293b; border-radius: 12px; padding: 15px 5px; text-align: center; cursor: pointer; transition: 0.2s; }
-        .card:active { transform: scale(0.95); }
-        .icon { font-size: 40px; margin-bottom: 5px; }
-        .stars { background: #334155; display: inline-block; padding: 2px 10px; border-radius: 15px; font-size: 12px; color: #fbbf24; }
+        .card { background: #1e293b; border-radius: 12px; padding: 15px 5px; text-align: center; cursor: pointer; }
+        .icon { font-size: 30px; margin-bottom: 5px; }
+        .stars { font-size: 12px; color: #fbbf24; background: #334155; padding: 2px 8px; border-radius: 10px; }
         
-        /* Modal */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: flex-end; }
+        /* Modal oyna */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: flex-end; }
         .modal-content { background: #1e293b; width: 100%; max-width: 400px; padding: 20px; border-radius: 20px 20px 0 0; }
-        .input-box { width: 100%; padding: 12px; border-radius: 10px; border: none; margin: 10px 0; background: #0f172a; color: white; }
-        .btn-blue { background: #6366f1; color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; }
+        .input-box { width: 100%; padding: 12px; border-radius: 10px; border: none; margin: 10px 0; background: #0f172a; color: white; box-sizing: border-box; }
         .btn-full { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; margin-top: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
 
+<!-- Premium Tugmasi (Allohida turibdi) -->
+<div class="premium-btn" onclick="openPremium()">⭐️ Hisobni to'ldirish (Premium)</div>
+
+<!-- Sovg'alar Grid -->
 <div class="grid" id="giftGrid"></div>
 
+<!-- Sovg'a Modal oynasi -->
 <div class="modal" id="modal">
     <div class="modal-content">
         <div id="modalIcon" style="font-size: 60px; text-align: center;"></div>
-        <h3 id="modalName" style="text-align: center; margin: 10px 0;"></h3>
-        <div class="stars" id="modalStars" style="display: block; width: fit-content; margin: 0 auto;"></div>
-        
+        <h3 id="modalName" style="text-align: center;"></h3>
         <input type="text" id="username" class="input-box" placeholder="@username">
-        <button class="btn-blue" onclick="setSelf()">O'zimga</button>
-        
-        <div style="display: flex; justify-content: space-between; align-items: center; margin: 15px 0;">
-            <span>Izoh qo'shish</span>
-            <input type="checkbox" id="addComment">
-        </div>
-        
-        <div id="totalPrice" style="text-align: center; color: #ef4444; font-weight: bold; margin-bottom: 10px;"></div>
-        
-        <button class="btn-full" style="background: #334155; color: white;" onclick="closeModal()">Bekor qilish</button>
-        <button class="btn-full" style="background: #6366f1; color: white;" onclick="send()">Yuborish</button>
+        <button class="btn-full" style="background:#6366f1" onclick="setSelf()">O'zimga</button>
+        <div id="totalPrice" style="text-align: center; margin: 15px; color: #ef4444; font-weight: bold;"></div>
+        <button class="btn-full" style="background:#334155" onclick="closeModal()">Bekor qilish</button>
+        <button class="btn-full" style="background:#6366f1" onclick="send()">Yuborish</button>
     </div>
 </div>
 
@@ -51,19 +46,17 @@
     tg.expand();
 
     const gifts = [
-        { name: 'PUSHTI YURAK', icon: '💝', stars: 15, price: 5000 },
-        { name: 'AYIQCHA', icon: '🧸', stars: 15, price: 5000 },
-        { name: 'SOVG\'A QUTISI', icon: '🎁', stars: 25, price: 7000 },
-        { name: 'ATIRGUL', icon: '🌹', stars: 25, price: 7000 },
-        { name: 'TO\'RT', icon: '🎂', stars: 50, price: 15000 },
-        { name: 'GUL', icon: '💐', stars: 50, price: 15000 },
-        { name: 'ROKETA', icon: '🚀', stars: 50, price: 15000 },
-        { name: 'BUTULKA', icon: '🍾', stars: 50, price: 15000 },
-        { name: 'KUBOK', icon: '🏆', stars: 100, price: 28000 },
-        { name: 'UZUK', icon: '💍', stars: 100, price: 28000 }
+        { name: 'Pushti yurak', icon: '💝', price: 5000 },
+        { name: 'Ayiqcha', icon: '🧸', price: 5000 },
+        { name: 'Sovg\'a qutisi', icon: '🎁', price: 7000 },
+        { name: 'Atirgul', icon: '🌹', price: 7000 },
+        { name: 'To\'rt', icon: '🎂', price: 15000 },
+        { name: 'Gul', icon: '💐', price: 15000 },
+        { name: 'Roketa', icon: '🚀', price: 15000 },
+        { name: 'Butulka', icon: '🍾', price: 15000 },
+        { name: 'Kubok', icon: '🏆', price: 28000 },
+        { name: 'Uzuk', icon: '💍', price: 28000 }
     ];
-
-    let currentGift = null;
 
     function render() {
         const grid = document.getElementById('giftGrid');
@@ -71,27 +64,27 @@
             grid.innerHTML += `
                 <div class="card" onclick="openModal('${g.name}')">
                     <div class="icon">${g.icon}</div>
-                    <div class="stars">⭐ ${g.stars}</div>
+                    <div class="stars">${g.price.toLocaleString()} so'm</div>
                 </div>
             `;
         });
     }
 
+    let currentGift = null;
     function openModal(name) {
         currentGift = gifts.find(g => g.name === name);
         document.getElementById('modalIcon').innerText = currentGift.icon;
         document.getElementById('modalName').innerText = currentGift.name;
-        document.getElementById('modalStars').innerText = '⭐ ' + currentGift.stars;
         document.getElementById('totalPrice').innerText = 'Jami narx: ' + currentGift.price.toLocaleString() + ' so\'m';
         document.getElementById('modal').style.display = 'flex';
     }
 
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
-
     function setSelf() { document.getElementById('username').value = '@' + (tg.initDataUnsafe?.user?.username || 'user'); }
-
+    function openPremium() { alert("Premium menyusiga o'tish..."); } // Bu yerda Premium uchun funksiya yozasiz
+    
     function send() {
-        const data = { action: 'buy_gift', gift: currentGift.name, price: currentGift.price, to: document.getElementById('username').value };
+        const data = { action: 'buy_gift', gift: currentGift.name, to: document.getElementById('username').value };
         tg.sendData(JSON.stringify(data));
         tg.close();
     }
