@@ -6,104 +6,81 @@
     <title>Premium Bot</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root { --primary: #6366f1; --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; }
-        body { background-color: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding-bottom: 80px; }
+        body { background-color: #0f172a; color: white; font-family: sans-serif; margin: 0; padding: 20px; }
+        h2 { border-left: 4px solid #6366f1; padding-left: 10px; margin-top: 30px; }
         
-        /* SAHIFALAR */
-        .page { display: none; padding: 20px; }
-        .page.active { display: block; }
+        /* 1. PREMIUM BO'LIMI */
+        .premium-box { background: #1e293b; padding: 20px; border-radius: 20px; }
+        .balans-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .btn-mini { background: #6366f1; padding: 10px 15px; border-radius: 10px; font-size: 12px; cursor: pointer; }
+        .plan-card { background: #0f172a; padding: 20px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* HEADER (Balans) */
-        .header-balance { background: #1e293b; padding: 15px; border-radius: 15px; text-align: center; margin-bottom: 20px; border: 1px solid #334155; }
-        .balans-val { font-size: 24px; font-weight: bold; color: #fbbf24; }
+        /* 2. SOVG'A BO'LIMI (Katta kartalar) */
+        .gift-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .gift-card { background: #1e293b; padding: 40px 20px; border-radius: 30px; text-align: center; border: 3px solid #334155; }
+        .gift-icon { font-size: 80px; display: block; margin-bottom: 15px; }
+        .gift-name { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
+        .gift-price { color: #fbbf24; font-weight: bold; font-size: 16px; }
 
-        /* PREMIUM PLANLAR */
-        .plan-card { background: var(--card); padding: 20px; border-radius: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; }
-
-        /* GIFT BO'LIMI (Katta kartalar) */
-        .gift-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .gift-card { background: var(--card); padding: 20px; border-radius: 20px; text-align: center; border: 2px solid #334155; transition: 0.3s; }
-        .gift-card:active { transform: scale(0.95); border-color: var(--primary); }
-        .gift-icon { font-size: 50px; display: block; margin-bottom: 10px; }
-        .gift-price { color: #94a3b8; font-size: 14px; }
-
-        /* INPUTS */
-        .input-field { width: 100%; padding: 15px; background: #1e293b; border: none; border-radius: 12px; color: white; margin-top: 10px; box-sizing: border-box; }
-        .btn-main { width: 100%; padding: 15px; background: var(--primary); border: none; border-radius: 12px; color: white; font-weight: bold; margin-top: 20px; cursor: pointer; }
-
-        /* BOTTOM NAV */
-        .nav { position: fixed; bottom: 0; width: 100%; background: #1e293b; display: flex; padding: 10px 0; border-top: 1px solid #334155; }
-        .nav-btn { flex: 1; text-align: center; cursor: pointer; font-size: 12px; color: #94a3b8; }
-        .nav-btn.active { color: var(--primary); }
+        /* 3. TO'LDIRISH BO'LIMI */
+        .pay-box { background: #1e293b; padding: 25px; border-radius: 20px; text-align: center; }
+        .input-pay { width: 100%; padding: 20px; border-radius: 15px; border: none; background: #0f172a; color: white; font-size: 18px; margin-top: 10px; box-sizing: border-box; }
+        .btn-big { width: 100%; padding: 20px; border-radius: 15px; background: #6366f1; color: white; border: none; font-weight: bold; font-size: 16px; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-<!-- 1. PREMIUM SAHIFA -->
-<div id="premium" class="page active">
-    <div class="header-balance">
-        <div>Joriy balansingiz:</div>
-        <div class="balans-val">0 so'm</div>
+    <!-- 1. PREMIUM VA BALANS -->
+    <h2>⭐️ Premium olish</h2>
+    <div class="premium-box">
+        <div class="balans-header">
+            <div>Balans: <b>0 so'm</b></div>
+            <div class="btn-mini" onclick="scrollToPay()">Hisobni to'ldirish +</div>
+        </div>
+        <div class="plan-card"><div>1 Oy Premium</div> <b>35.000 so'm</b></div>
+        <div class="plan-card"><div>3 Oy Premium</div> <b>95.000 so'm</b></div>
     </div>
-    <h3 style="margin-top:0">Premium Obunalar</h3>
-    <div class="plan-card"><div>1 Oy Premium</div> <b>35.000 so'm</b></div>
-    <div class="plan-card"><div>3 Oy Premium</div> <b>95.000 so'm</b></div>
-    <div class="plan-card"><div>1 Yil Premium</div> <b>290.000 so'm</b></div>
-</div>
 
-<!-- 2. GIFT SAHIFA (Katta kartalar) -->
-<div id="gifts" class="page">
-    <h3 style="margin-top:0">Sovg'alar do'koni</h3>
-    <div class="gift-grid">
-        <div class="gift-card" onclick="alert('Tanlandi')">
+    <!-- 2. SOVG'A (KATTA KARTALAR) -->
+    <h2>🎁 Sovg'alar</h2>
+    <div class="gift-container">
+        <div class="gift-card">
             <span class="gift-icon">🧸</span>
-            <div>Ayiqcha</div>
+            <div class="gift-name">Ayiqcha</div>
             <div class="gift-price">5.000 so'm</div>
         </div>
         <div class="gift-card">
             <span class="gift-icon">🌹</span>
-            <div>Atirgul</div>
+            <div class="gift-name">Atirgul</div>
             <div class="gift-price">7.000 so'm</div>
         </div>
         <div class="gift-card">
             <span class="gift-icon">🚀</span>
-            <div>Roketa</div>
+            <div class="gift-name">Roketa</div>
             <div class="gift-price">15.000 so'm</div>
         </div>
         <div class="gift-card">
             <span class="gift-icon">🏆</span>
-            <div>Kubok</div>
+            <div class="gift-name">Kubok</div>
             <div class="gift-price">28.000 so'm</div>
         </div>
     </div>
-</div>
 
-<!-- 3. HISOBNI TO'LDIRISH -->
-<div id="topup" class="page">
-    <h3 style="margin-top:0">Hisobni to'ldirish</h3>
-    <p style="color:#94a3b8; font-size: 14px;">Karta raqamiga pul o'tkazing va chekni yuboring.</p>
-    <div class="header-balance">5614 6821 1662 9579</div>
-    <input type="number" class="input-field" placeholder="Summani kiriting (so'm)">
-    <button class="btn-main">To'lovni tasdiqlash</button>
-</div>
+    <!-- 3. HISOBNI TO'LDIRISH -->
+    <h2 id="pay-section">💳 Hisobni to'ldirish</h2>
+    <div class="pay-box">
+        <p>Karta: <b>5614 6821 1662 9579</b></p>
+        <input type="number" class="input-pay" placeholder="Summani kiriting...">
+        <button class="btn-big">To'lovni tasdiqlash</button>
+    </div>
 
-<!-- BOTTOM NAVIGATSIYA -->
-<div class="nav">
-    <div class="nav-btn active" onclick="go(this, 'premium')">⭐️ Premium</div>
-    <div class="nav-btn" onclick="go(this, 'gifts')">🎁 Sovg'alar</div>
-    <div class="nav-btn" onclick="go(this, 'topup')">💳 To'ldirish</div>
-</div>
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
 
-<script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
-
-    function go(el, id) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        el.classList.add('active');
-    }
-</script>
+        function scrollToPay() {
+            document.getElementById('pay-section').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
 </body>
 </html>
