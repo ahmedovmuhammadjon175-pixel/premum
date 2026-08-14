@@ -3,84 +3,298 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Bot</title>
+    <title>TezkorStarsXBot</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { background-color: #0f172a; color: white; font-family: sans-serif; margin: 0; padding: 20px; }
-        h2 { border-left: 4px solid #6366f1; padding-left: 10px; margin-top: 30px; }
+        * { box-sizing: border-box; }
+        body { 
+            background-color: #0c111d; 
+            color: #f8fafc; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0; 
+            padding: 15px; 
+            padding-bottom: 50px;
+        }
         
+        /* HEADER (Balans) */
+        .balance-header {
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 15px 20px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .balance-title { font-size: 12px; color: #94a3b8; font-weight: bold; }
+        .balance-amount { font-size: 20px; font-weight: bold; color: #22c55e; }
+
+        h2 { 
+            font-size: 18px; 
+            margin: 25px 0 15px 0; 
+            color: #94a3b8; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+
         /* 1. PREMIUM BO'LIMI */
-        .premium-box { background: #1e293b; padding: 20px; border-radius: 20px; }
-        .balans-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .btn-mini { background: #6366f1; padding: 10px 15px; border-radius: 10px; font-size: 12px; cursor: pointer; }
-        .plan-card { background: #0f172a; padding: 20px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .premium-container { display: flex; flex-direction: column; gap: 10px; }
+        .premium-card { 
+            background: linear-gradient(135deg, #1e1b4b, #312e81); 
+            border: 1px solid #4338ca;
+            padding: 18px 20px; 
+            border-radius: 16px; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .premium-card:active { transform: scale(0.98); }
+        .premium-title { font-size: 16px; font-weight: bold; color: #ffffff; }
+        .premium-price { font-size: 15px; color: #fbbf24; font-weight: bold; }
 
-        /* 2. SOVG'A BO'LIMI (Katta kartalar) */
-        .gift-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-        .gift-card { background: #1e293b; padding: 40px 20px; border-radius: 30px; text-align: center; border: 3px solid #334155; }
-        .gift-icon { font-size: 80px; display: block; margin-bottom: 15px; }
-        .gift-name { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
-        .gift-price { color: #fbbf24; font-weight: bold; font-size: 16px; }
+        /* 2. GIFT BO'LIMI (KATTA KARTALAR) */
+        .gifts-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 15px; 
+        }
+        .gift-card { 
+            background: #1e293b; 
+            padding: 35px 15px; 
+            border-radius: 24px; 
+            text-align: center; 
+            border: 2px solid #334155;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .gift-card:active { transform: scale(0.95); border-color: #6366f1; }
+        .gift-emoji { font-size: 65px; margin-bottom: 12px; display: block; }
+        .gift-price { 
+            color: #fbbf24; 
+            font-weight: bold; 
+            font-size: 16px; 
+            background: #0f172a; 
+            padding: 6px 12px; 
+            border-radius: 12px; 
+            display: inline-block; 
+            margin-top: 5px;
+        }
 
-        /* 3. TO'LDIRISH BO'LIMI */
-        .pay-box { background: #1e293b; padding: 25px; border-radius: 20px; text-align: center; }
-        .input-pay { width: 100%; padding: 20px; border-radius: 15px; border: none; background: #0f172a; color: white; font-size: 18px; margin-top: 10px; box-sizing: border-box; }
-        .btn-big { width: 100%; padding: 20px; border-radius: 15px; background: #6366f1; color: white; border: none; font-weight: bold; font-size: 16px; margin-top: 15px; }
+        /* MODAL OYNA (Sovg'ani bosganda) */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            width: 100%; 
+            background: #1e293b; 
+            border-radius: 24px 24px 0 0; 
+            padding: 25px 20px; 
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.8); 
+            z-index: 1000;
+        }
+        .input-group { position: relative; margin: 15px 0; }
+        .input-box { 
+            width: 100%; 
+            padding: 14px; 
+            border-radius: 12px; 
+            border: 1px solid #334155; 
+            background: #0f172a; 
+            color: white; 
+            font-size: 15px;
+            outline: none;
+        }
+        .self-btn { 
+            position: absolute; 
+            right: 6px; 
+            top: 6px; 
+            background: #6366f1; 
+            border: none; 
+            color: white; 
+            padding: 8px 14px; 
+            border-radius: 8px; 
+            font-size: 12px; 
+            font-weight: bold;
+            cursor: pointer; 
+        }
+        .btn-action { 
+            width: 100%; 
+            padding: 16px; 
+            border-radius: 12px; 
+            border: none; 
+            font-size: 15px;
+            font-weight: bold; 
+            margin-top: 10px; 
+            cursor: pointer; 
+        }
+
+        /* 3. HISOBNI TO'LDIRISH BO'LIMI */
+        .topup-box { 
+            background: #1e293b; 
+            border: 1px solid #334155;
+            padding: 20px; 
+            border-radius: 20px; 
+            text-align: center;
+        }
+        .card-number {
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #38bdf8;
+            margin: 10px 0;
+            background: #0f172a;
+            padding: 12px;
+            border-radius: 12px;
+        }
+        .input-sum { 
+            width: 100%; 
+            padding: 16px; 
+            border-radius: 12px; 
+            border: 1px solid #334155; 
+            background: #0f172a; 
+            color: white; 
+            font-size: 16px; 
+            margin: 15px 0;
+            outline: none;
+        }
+        .btn-pay { 
+            width: 100%; 
+            padding: 16px; 
+            border-radius: 12px; 
+            background: #22c55e; 
+            color: white; 
+            border: none; 
+            font-weight: bold; 
+            font-size: 16px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-    <!-- 1. PREMIUM VA BALANS -->
-    <h2>⭐️ Premium olish</h2>
-    <div class="premium-box">
-        <div class="balans-header">
-            <div>Balans: <b>0 so'm</b></div>
-            <div class="btn-mini" onclick="scrollToPay()">Hisobni to'ldirish +</div>
+    <!-- TEPADAGI BALANS -->
+    <div class="balance-header">
+        <div>
+            <div class="balance-title">BALANSINGIZ</div>
+            <div class="balance-amount">0 so'm</div>
         </div>
-        <div class="plan-card"><div>1 Oy Premium</div> <b>35.000 so'm</b></div>
-        <div class="plan-card"><div>3 Oy Premium</div> <b>95.000 so'm</b></div>
+        <div style="font-size: 24px;">💳</div>
     </div>
 
-    <!-- 2. SOVG'A (KATTA KARTALAR) -->
-    <h2>🎁 Sovg'alar</h2>
-    <div class="gift-container">
-        <div class="gift-card">
-            <span class="gift-icon">🧸</span>
-            <div class="gift-name">Ayiqcha</div>
-            <div class="gift-price">5.000 so'm</div>
+    <!-- 1-BO'LIM: PREMIUM OLISH -->
+    <h2>⭐️ Premium Olish</h2>
+    <div class="premium-container">
+        <div class="premium-card" onclick="buyPremium('1 Oy', 35000)">
+            <div class="premium-title">1 Oy Premium</div>
+            <div class="premium-price">35.000 so'm</div>
         </div>
-        <div class="gift-card">
-            <span class="gift-icon">🌹</span>
-            <div class="gift-name">Atirgul</div>
-            <div class="gift-price">7.000 so'm</div>
+        <div class="premium-card" onclick="buyPremium('3 Oy', 95000)">
+            <div class="premium-title">3 Oy Premium</div>
+            <div class="premium-price">95.000 so'm</div>
         </div>
-        <div class="gift-card">
-            <span class="gift-icon">🚀</span>
-            <div class="gift-name">Roketa</div>
-            <div class="gift-price">15.000 so'm</div>
-        </div>
-        <div class="gift-card">
-            <span class="gift-icon">🏆</span>
-            <div class="gift-name">Kubok</div>
-            <div class="gift-price">28.000 so'm</div>
+        <div class="premium-card" onclick="buyPremium('1 Yil', 290000)">
+            <div class="premium-title">1 Yil Premium</div>
+            <div class="premium-price">290.000 so'm</div>
         </div>
     </div>
 
-    <!-- 3. HISOBNI TO'LDIRISH -->
-    <h2 id="pay-section">💳 Hisobni to'ldirish</h2>
-    <div class="pay-box">
-        <p>Karta: <b>5614 6821 1662 9579</b></p>
-        <input type="number" class="input-pay" placeholder="Summani kiriting...">
-        <button class="btn-big">To'lovni tasdiqlash</button>
+    <!-- 2-BO'LIM: GIFT SOVG'A OLISH -->
+    <h2>🎁 Gift Sovg'a Olish</h2>
+    <div class="gifts-grid" id="giftGrid"></div>
+
+    <!-- MODAL OYNA (SOVG'A USTI BOSILGANDA) -->
+    <div class="modal" id="modal">
+        <div id="modalIcon" style="font-size: 70px; text-align: center;"></div>
+        <h3 id="modalName" style="text-align: center; margin: 10px 0; font-size: 20px;"></h3>
+        
+        <div class="input-group">
+            <input type="text" id="username" class="input-box" placeholder="@username kiritasiz">
+            <button class="self-btn" onclick="setSelf()">O'zimga</button>
+        </div>
+
+        <div id="totalPrice" style="text-align: center; color: #ef4444; font-size: 18px; font-weight: bold; margin: 15px 0;"></div>
+
+        <button class="btn-action" style="background:#6366f1; color:white;" onclick="sendGift()">Yuborish</button>
+        <button class="btn-action" style="background:#334155; color:white;" onclick="closeModal()">Bekor qilish</button>
+    </div>
+
+    <!-- 3-BO'LIM: HISOBNI TO'LDIRISH -->
+    <h2>💳 Hisobni To'ldirish</h2>
+    <div class="topup-box">
+        <div style="font-size: 13px; color: #94a3b8;">To'lov uchun karta raqam:</div>
+        <div class="card-number">5614 6821 1662 9579</div>
+        <input type="number" class="input-sum" placeholder="Summani kiriting (so'mda)">
+        <button class="btn-pay" onclick="payConfirm()">To'lovni tasdiqlash</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        function scrollToPay() {
-            document.getElementById('pay-section').scrollIntoView({ behavior: 'smooth' });
+        // Sovg'alar ro'yxati va siz aytgan narxlar
+        const gifts = [
+            { name: 'Pushti yurak', icon: '💝', price: 5000 },
+            { name: 'Ayiqcha', icon: '🧸', price: 5000 },
+            { name: 'Sovg\'a qutisi', icon: '🎁', price: 7000 },
+            { name: 'Atirgul', icon: '🌹', price: 7000 },
+            { name: 'To\'rt', icon: '🎂', price: 15000 },
+            { name: 'Gul', icon: '💐', price: 15000 },
+            { name: 'Roketa', icon: '🚀', price: 15000 },
+            { name: 'Butulka', icon: '🍾', price: 15000 },
+            { name: 'Kubok', icon: '🏆', price: 28000 },
+            { name: 'Uzuk', icon: '💍', price: 28000 }
+        ];
+
+        function renderGifts() {
+            const grid = document.getElementById('giftGrid');
+            gifts.forEach(g => {
+                grid.innerHTML += `
+                    <div class="gift-card" onclick="openModal('${g.name}')">
+                        <span class="gift-emoji">${g.icon}</span>
+                        <div class="gift-price">${g.price.toLocaleString()} so'm</div>
+                    </div>
+                `;
+            });
         }
+
+        let currentGift = null;
+        function openModal(name) {
+            currentGift = gifts.find(g => g.name === name);
+            document.getElementById('modalIcon').innerText = currentGift.icon;
+            document.getElementById('modalName').innerText = currentGift.name;
+            document.getElementById('totalPrice').innerText = 'Jami narx: ' + currentGift.price.toLocaleString() + ' so\'m';
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+        function setSelf() { document.getElementById('username').value = '@' + (tg.initDataUnsafe?.user?.username || 'user'); }
+
+        // Premium sotib olish uchun
+        function buyPremium(plan, price) {
+            const data = { action: 'buy_premium', plan: plan, price: price };
+            tg.sendData(JSON.stringify(data));
+            tg.close();
+        }
+
+        // Sovg'a yuborish uchun
+        function sendGift() {
+            const user = document.getElementById('username').value;
+            if(!user) { alert("Username kiriting!"); return; }
+            const data = { action: 'buy_gift', gift: currentGift.name, price: currentGift.price, to: user };
+            tg.sendData(JSON.stringify(data));
+            tg.close();
+        }
+
+        // To'lovni tasdiqlash uchun
+        function payConfirm() {
+            alert("To'lov chekini botga yuboring!");
+        }
+
+        renderGifts();
     </script>
 </body>
 </html>
